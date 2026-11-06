@@ -1,0 +1,18 @@
+# Pricing rules for Acme Parts (fictional). Edited by the customer, read by quoteflow/pricing.py.
+# Rates are strings so they are parsed exactly as Decimal (no floating-point error).
+# Every amount is rounded down to the yen.
+
+# Consumption tax, applied once to the quote total.
+tax_rate = "0.10"
+
+# Days a quote stays valid after the issue date.
+validity_days = 30
+
+[quantity_discount]
+# A line with at least `min_quantity` units gets `rate` off that line.
+min_quantity = 10
+rate = "0.05"
+
+[express]
+# Express handling adds `rate` of the subtotal.
+rate = "0.10"
