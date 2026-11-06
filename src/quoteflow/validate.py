@@ -13,6 +13,20 @@ from quoteflow.catalog import Catalog
 from quoteflow.models import QuoteRequest
 from quoteflow.normalize import normalize_unit
 
+# Issues that make the request impossible to price correctly. The reviewer must fix these
+# before approving; the rest ("確認") only need to be read.
+BLOCKING_CODES = frozenset(
+    {
+        "not_quote_request",
+        "missing_company",
+        "no_items",
+        "unknown_product",
+        "missing_quantity",
+        "non_positive_quantity",
+        "unit_mismatch",
+    }
+)
+
 
 class Issue(BaseModel):
     code: str
