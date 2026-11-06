@@ -6,6 +6,7 @@ never *what* it means - e.g. "ＴＩＥ－２００" becomes "TIE-200", but a ty
 
 import re
 import unicodedata
+from datetime import date
 
 # Dash-like characters customers type instead of "-". The katakana long-vowel mark "ー"
 # is included for product codes only: in names it is part of words such as "ワッシャー".
@@ -74,4 +75,26 @@ def parse_quantity(value: object) -> int | None:
     if isinstance(value, str):
         text = nfkc(value).replace(",", "").strip()
         return int(text) if re.fullmatch(r"-?\d+", text) else None
+    return None
+
+
+def resolve_date(text: str, received_at: date) -> date | None:
+    """Parse '2026/12/18', '2026-12-18', '12/18', '12月18日', '2026年12月18日'.
+
+    A date without a year means the first such date on or after `received_at`
+    (a request received in November for "1/25" means next January).
+    Returns None for anything else, including impossible dates.
+    """
+    t = nfkc(text).strip()
+    full = re.fullmatch(r"(\d{4})[/\-年](\d{1,2})[/\-月](\d{1,2})日?", t)
+    short = re.fullmatch(r"(\d{1,2})[/月](\d{1,2})日?", t)
+    try:
+        if full:
+            return date(int(full[1]), int(full[2]), int(full[3]))
+        if short:
+            month, day = int(short[1]), int(short[2])
+            candidate = date(received_at.year, month, day)
+            return candidate if candidate >= received_at else date(received_at.year + 1, month, day)
+    except ValueError:
+        return None
     return None
