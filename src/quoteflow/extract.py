@@ -13,6 +13,7 @@ import hashlib
 import json
 import logging
 import re
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
@@ -175,28 +176,49 @@ def request_key(params: dict[str, Any]) -> str:
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
 
 
+def fixture_path(fixture_dir: Path, params: dict[str, Any]) -> Path:
+    return fixture_dir / f"{request_key(params)}.json"
+
+
+def load_fixture(fixture_dir: Path, params: dict[str, Any]) -> dict[str, Any] | None:
+    """The saved record for these params, or None. Includes `latency_seconds` if recorded."""
+    path = fixture_path(fixture_dir, params)
+    if not path.exists():
+        return None
+    record: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return record
+
+
 def replay_sender(fixture_dir: Path) -> Send:
     def send(params: dict[str, Any]) -> BetaMessage:
-        path = fixture_dir / f"{request_key(params)}.json"
-        if not path.exists():
+        fixture = load_fixture(fixture_dir, params)
+        if fixture is None:
+            name = fixture_path(fixture_dir, params).name
             raise ExtractionError(
                 "missing_fixture",
-                f"no recorded response for this request ({path.name}). "
+                f"no recorded response for this request ({name}). "
                 "Re-record with an API key: quoteflow run ... --record <dir>",
             )
-        fixture = json.loads(path.read_text(encoding="utf-8"))
         return BetaMessage.model_validate(fixture["response"])
 
     return send
 
 
 def recording_sender(inner: Send, fixture_dir: Path) -> Send:
+    """Call `inner` and save the response with how long it took (for latency reporting)."""
+
     def send(params: dict[str, Any]) -> BetaMessage:
+        started = time.perf_counter()
         response = inner(params)
+        record = {
+            "source": "recorded",
+            "model": params["model"],
+            "latency_seconds": round(time.perf_counter() - started, 3),
+            "response": response.to_dict(),
+        }
         fixture_dir.mkdir(parents=True, exist_ok=True)
-        record = {"source": "recorded", "model": params["model"], "response": response.to_dict()}
-        path = fixture_dir / f"{request_key(params)}.json"
-        path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        text = json.dumps(record, ensure_ascii=False, indent=2) + "\n"
+        fixture_path(fixture_dir, params).write_text(text, encoding="utf-8")
         return response
 
     return send
