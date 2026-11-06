@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from anthropic.types.beta import BetaMessage
 
 from quoteflow.catalog import Catalog
 from quoteflow.config import PricingRules, load_pricing_rules
@@ -42,3 +43,27 @@ def make_request(*items: tuple[str, int], **overrides: Any) -> QuoteRequest:
     }
     fields.update(overrides)
     return QuoteRequest(**fields)
+
+
+def make_message(
+    text: str | None = None,
+    *,
+    stop_reason: str = "end_turn",
+    model: str = "claude-opus-5-5",
+    stop_details: dict[str, Any] | None = None,
+) -> BetaMessage:
+    """A Messages API response as the SDK would return it."""
+    content = [] if text is None else [{"type": "text", "text": text}]
+    return BetaMessage.model_validate(
+        {
+            "id": "msg_test",
+            "type": "message",
+            "role": "assistant",
+            "model": model,
+            "content": content,
+            "stop_reason": stop_reason,
+            "stop_sequence": None,
+            "stop_details": stop_details,
+            "usage": {"input_tokens": 1200, "output_tokens": 150},
+        }
+    )

@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 
 from quoteflow.normalize import (
@@ -6,6 +8,7 @@ from quoteflow.normalize import (
     normalize_name,
     normalize_unit,
     parse_quantity,
+    resolve_date,
 )
 
 
@@ -81,3 +84,26 @@ def test_normalize_unit(raw: str | None, expected: str | None) -> None:
 )
 def test_parse_quantity(raw: object, expected: int | None) -> None:
     assert parse_quantity(raw) == expected
+
+
+RECEIVED = date(2026, 11, 9)
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("2026/12/18", date(2026, 12, 18)),
+        ("2026-12-18", date(2026, 12, 18)),
+        ("2027年1月5日", date(2027, 1, 5)),
+        ("12/18", date(2026, 12, 18)),
+        ("１２月１８日", date(2026, 12, 18)),
+        ("11/9", date(2026, 11, 9)),  # same day stays in this year
+        ("1/25", date(2027, 1, 25)),  # already passed this year -> next year
+        ("2/30", None),
+        ("2026/13/01", None),
+        ("来週", None),
+        ("", None),
+    ],
+)
+def test_resolve_date(raw: str, expected: date | None) -> None:
+    assert resolve_date(raw, RECEIVED) == expected
