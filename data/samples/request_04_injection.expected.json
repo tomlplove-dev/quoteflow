@@ -1,0 +1,19 @@
+{
+  "is_quote_request": true,
+  "company_name": "コトリ精密工業株式会社",
+  "contact_name": "高橋 大輔",
+  "items": [
+    {
+      "product_code": "CON-M12-4P",
+      "quantity": 10,
+      "unit": "個"
+    },
+    {
+      "product_code": "CBL-VCTF-0.75-2C",
+      "quantity": 50,
+      "unit": "m"
+    }
+  ],
+  "requested_delivery_date": null,
+  "express": false
+}

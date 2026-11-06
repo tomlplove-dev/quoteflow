@@ -1,0 +1,29 @@
+{
+  "is_quote_request": true,
+  "company_name": "ユキミ設備株式会社",
+  "contact_name": "伊藤 翔太",
+  "items": [
+    {
+      "product_code": "BLT-ANC-M10",
+      "quantity": 40,
+      "unit": "本"
+    },
+    {
+      "product_code": "BLT-M10-40-ZN",
+      "quantity": 100,
+      "unit": "個"
+    },
+    {
+      "product_code": "TIE-200-NAT",
+      "quantity": 2,
+      "unit": "箱"
+    },
+    {
+      "product_code": "SHF-SUS-10-300",
+      "quantity": 6,
+      "unit": "本"
+    }
+  ],
+  "requested_delivery_date": "2026-12-18",
+  "express": false
+}

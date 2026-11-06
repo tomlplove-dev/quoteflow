@@ -1,0 +1,24 @@
+{
+  "is_quote_request": true,
+  "company_name": "株式会社ソラノ製作所",
+  "contact_name": "鈴木 美咲",
+  "items": [
+    {
+      "product_code": "ORG-P20-NBR",
+      "quantity": 100,
+      "unit": "個"
+    },
+    {
+      "product_code": "GRS-LI-400",
+      "quantity": 5,
+      "unit": "個"
+    },
+    {
+      "product_code": "TAP-PVC-19-BK",
+      "quantity": 10,
+      "unit": "巻"
+    }
+  ],
+  "requested_delivery_date": "2026-11-20",
+  "express": true
+}

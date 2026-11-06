@@ -1,0 +1,27 @@
+product_code,name,aliases,unit,unit_price,category
+BLT-M6-20-SUS,六角ボルト M6×20 ステンレス,M6x20 SUS|M6ボルト20 SUS,個,18,fastener
+BLT-M8-30-SUS,六角ボルト M8×30 ステンレス,M8x30 SUS|M8ボルト30 SUS,個,32,fastener
+BLT-M10-40-ZN,六角ボルト M10×40 亜鉛めっき,M10x40 ユニクロ|M10ボルト40,個,41,fastener
+NUT-M6-SUS,六角ナット M6 ステンレス,M6ナット SUS|M6 nut SUS,個,6,fastener
+NUT-M8-SUS,六角ナット M8 ステンレス,M8ナット SUS|M8 nut SUS,個,9,fastener
+WSH-M6-SUS,平ワッシャー M6 ステンレス,M6ワッシャー|M6座金 SUS,個,3,fastener
+WSH-M8-SW,スプリングワッシャー M8,M8スプワ|M8ばね座金,個,5,fastener
+SCR-M4-10-PH,なべ小ねじ M4×10,M4x10 ナベ|M4ビス10,個,4,fastener
+BRG-6201ZZ,深溝玉軸受 6201ZZ,6201ZZ|ベアリング6201,個,380,bearing
+BRG-6204ZZ,深溝玉軸受 6204ZZ,6204ZZ|ベアリング6204,個,520,bearing
+BRG-6305DDU,深溝玉軸受 6305DDU,6305DDU|ベアリング6305,個,1350,bearing
+ORG-P20-NBR,Oリング P20 NBR,P20 Oリング|Oリング P-20,個,45,seal
+ORG-G50-FKM,Oリング G50 フッ素ゴム,G50 フッ素Oリング|Oリング G-50 FKM,個,210,seal
+CBL-VCTF-0.75-2C,ビニルキャブタイヤコード 0.75sq 2心,VCTF 0.75 2芯|キャブタイヤ0.75-2C,m,85,cable
+CBL-VCTF-1.25-3C,ビニルキャブタイヤコード 1.25sq 3心,VCTF 1.25 3芯|キャブタイヤ1.25-3C,m,160,cable
+CON-M12-4P,M12コネクタ 4ピン オス,M12 4P コネクタ|M12-4ピン,個,1980,connector
+CON-RJ45-CAT6,RJ45モジュラープラグ Cat6,RJ45 Cat6|LANコネクタ Cat6,個,65,connector
+TRM-R1.25-4,圧着端子 R1.25-4,R1.25-4|丸端子1.25-4,個,8,connector
+TIE-200-NAT,結束バンド 200mm ナチュラル 100本入,ケーブルタイ200|結束バンド200,箱,480,consumable
+TAP-PVC-19-BK,ビニールテープ 19mm 黒,黒ビニテ|ビニールテープ黒,巻,120,consumable
+SPR-CMP-10-30,圧縮ばね 外径10×長さ30,圧縮バネ10-30|コイルばね φ10 L30,個,95,mechanical
+PIN-PRL-6-30,平行ピン φ6×30,平行ピン6x30|ピン6-30,本,28,mechanical
+SHF-SUS-10-300,ステンレスシャフト φ10×300,SUSシャフト10-300|シャフトφ10 L300,本,1650,mechanical
+BLT-ANC-M10,アンカーボルト M10,M10アンカー|アンカーM10,本,230,fastener
+GRS-LI-400,リチウムグリース 400g,グリース400g|リチウムグリス,個,890,consumable
+FLT-AIR-01,エアフィルターエレメント AF-01,AF-01|フィルターエレメントAF01,個,2400,consumable
