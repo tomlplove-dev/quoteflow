@@ -1,4 +1,4 @@
-.PHONY: install lint format typecheck test check data eval demo
+.PHONY: install lint format typecheck test check data demo-fixtures demo record eval
 
 install:
 	uv sync
@@ -28,6 +28,25 @@ data:
 eval:
 	@echo "eval: not implemented yet (Phase 5)"
 
-# Implemented in Phase 4 (recorded-response mode, no API key needed).
+# Demo dates are fixed so the replayed requests match the saved responses.
+DEMO_FLAGS = --replay evals/fixtures/demo --received-date 2026-11-09 --issue-date 2026-11-09 --out out/demo
+RECORD_FLAGS = --record evals/fixtures/demo --received-date 2026-11-09 --issue-date 2026-11-09 --out out/demo
+
+# Rebuild the stand-in responses used by the demo (no API key needed).
+demo-fixtures:
+	uv run python scripts/make_demo_fixtures.py
+
+# End-to-end run without an API key, using saved responses. The last two runs are
+# expected to stop: one contains a prompt injection, one is not a quote request.
 demo:
-	@echo "demo: not implemented yet (Phase 4)"
+	uv run quoteflow run data/samples/request_01.txt --yes $(DEMO_FLAGS)
+	uv run quoteflow run data/samples/request_03.eml --yes $(DEMO_FLAGS)
+	-uv run quoteflow run data/samples/request_04_injection.txt --yes $(DEMO_FLAGS)
+	-uv run quoteflow run data/samples/request_05_not_quote.txt --yes $(DEMO_FLAGS)
+
+# Replace the stand-ins with real Claude responses (needs ANTHROPIC_API_KEY, costs money).
+record:
+	-uv run quoteflow run data/samples/request_01.txt --yes $(RECORD_FLAGS)
+	-uv run quoteflow run data/samples/request_03.eml --yes $(RECORD_FLAGS)
+	-uv run quoteflow run data/samples/request_04_injection.txt --yes $(RECORD_FLAGS)
+	-uv run quoteflow run data/samples/request_05_not_quote.txt --yes $(RECORD_FLAGS)

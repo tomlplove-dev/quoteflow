@@ -1,0 +1,23 @@
+{
+  "source": "stand-in",
+  "sample": "request_01.txt",
+  "model": "claude-opus-5-5",
+  "response": {
+    "id": "standin_request_01",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-opus-5-5",
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"is_quote_request\": true, \"company_name\": \"ミナモ機工株式会社\", \"contact_name\": \"佐藤 健一\", \"items\": [{\"product_code\": \"BRG-6204ZZ\", \"quantity\": 20, \"unit\": \"個\"}, {\"product_code\": \"BLT-M8-30-SUS\", \"quantity\": 200, \"unit\": \"個\"}, {\"product_code\": \"NUT-M8-SUS\", \"quantity\": 200, \"unit\": \"個\"}], \"requested_delivery_date\": \"2026-12-10\", \"express\": false, \"notes\": null}"
+      }
+    ],
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    }
+  }
+}

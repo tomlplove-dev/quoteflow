@@ -1,0 +1,23 @@
+{
+  "source": "stand-in",
+  "sample": "request_05_not_quote.txt",
+  "model": "claude-opus-5-5",
+  "response": {
+    "id": "standin_request_05_not_quote",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-opus-5-5",
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"is_quote_request\": false, \"company_name\": null, \"contact_name\": null, \"items\": [], \"requested_delivery_date\": null, \"express\": false, \"notes\": null}"
+      }
+    ],
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    }
+  }
+}
