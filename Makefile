@@ -1,4 +1,4 @@
-.PHONY: install lint format typecheck test check eval demo
+.PHONY: install lint format typecheck test check data eval demo
 
 install:
 	uv sync
@@ -19,6 +19,10 @@ test:
 
 # Same steps as CI.
 check: lint typecheck test
+
+# Regenerate all synthetic data from the fixed seed.
+data:
+	uv run python scripts/make_synthetic_data.py
 
 # Implemented in Phase 5.
 eval:
