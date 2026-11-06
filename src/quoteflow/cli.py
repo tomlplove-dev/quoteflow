@@ -1,4 +1,4 @@
-"""Command-line entry point. `eval` and `serve-mcp` are added in later phases."""
+"""Command-line entry point. `serve-mcp` is added in Phase 6."""
 
 from dataclasses import replace
 from datetime import date
@@ -11,7 +11,8 @@ import typer
 
 from quoteflow import __version__
 from quoteflow.catalog import Catalog
-from quoteflow.config import Settings, load_dotenv, load_pricing_rules
+from quoteflow.config import PROJECT_ROOT, Settings, load_dotenv, load_pricing_rules
+from quoteflow.evaluation import evaluate, load_cases, render_report, update_doc
 from quoteflow.extract import Send, live_sender, recording_sender, replay_sender
 from quoteflow.models import QuoteRequest
 from quoteflow.pipeline import Reviewer, run_pipeline
@@ -118,6 +119,66 @@ def run(
     typer.echo(result.message)
     if result.status in {"failed", "needs_review"}:
         raise typer.Exit(code=1)
+
+
+@app.command("eval")
+def eval_command(
+    model: Annotated[
+        list[str] | None,
+        typer.Option(help="Model to evaluate; repeat to compare (default: QUOTEFLOW_MODEL)"),
+    ] = None,
+    live: Annotated[
+        bool, typer.Option("--live", help="Call the API and record responses (costs money)")
+    ] = False,
+    fixtures: Annotated[Path, typer.Option(help="Recorded responses, one folder per model")] = (
+        PROJECT_ROOT / "evals" / "fixtures"
+    ),
+    cases: Annotated[Path, typer.Option(help="Labelled cases (JSON lines)")] = (
+        PROJECT_ROOT / "data" / "eval" / "cases.jsonl"
+    ),
+    limit: Annotated[int | None, typer.Option(help="Only the first N cases (smoke test)")] = None,
+    workers: Annotated[int, typer.Option(help="Parallel requests")] = 4,
+    update_docs: Annotated[
+        bool, typer.Option("--update-docs", help="Write the tables into docs/03_evaluation.md")
+    ] = False,
+) -> None:
+    """Measure extraction accuracy, injection resistance, cost and latency per model."""
+    base = Settings.from_env()
+    catalog = Catalog.load(base.price_list_path)
+    selected = load_cases(cases)[:limit]
+    runs = {}
+    for name in model or [base.model]:
+        settings = replace(base, model=name)
+        folder = fixtures / name
+        if live:
+            try:
+                send: Send = recording_sender(live_sender(settings), folder)
+            except anthropic.AnthropicError as e:
+                typer.echo(
+                    f"Claude APIに接続できません（APIキーを .env に設定してください）: {e}",
+                    err=True,
+                )
+                raise typer.Exit(code=1) from e
+        else:
+            send = replay_sender(folder)
+        typer.echo(
+            f"Evaluating {name} on {len(selected)} cases ({'live' if live else 'recorded'})...",
+            err=True,
+        )
+        runs[name] = evaluate(
+            selected,
+            settings=settings,
+            catalog=catalog,
+            send=send,
+            fixture_dir=folder,
+            workers=workers,
+        )
+
+    report = render_report(runs)
+    typer.echo(report)
+    if update_docs:
+        update_doc(PROJECT_ROOT / "docs" / "03_evaluation.md", report)
+        typer.echo("docs/03_evaluation.md を更新しました。", err=True)
 
 
 @app.command("from-json")

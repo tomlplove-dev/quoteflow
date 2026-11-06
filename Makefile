@@ -1,4 +1,4 @@
-.PHONY: install lint format typecheck test check data demo-fixtures demo record eval
+.PHONY: install lint format typecheck test check data demo-fixtures demo record eval eval-live
 
 install:
 	uv sync
@@ -24,9 +24,16 @@ check: lint typecheck test
 data:
 	uv run python scripts/make_synthetic_data.py
 
-# Implemented in Phase 5.
+EVAL_MODELS = --model claude-opus-5-5 --model claude-haiku-5-5
+
+# Score the recorded responses (no API key needed). Same command CI can run.
 eval:
-	@echo "eval: not implemented yet (Phase 5)"
+	uv run quoteflow eval $(EVAL_MODELS)
+
+# Call the API for every case and model, record the responses, update the docs.
+# Needs ANTHROPIC_API_KEY and costs money (roughly 1-2 USD for both models).
+eval-live:
+	uv run quoteflow eval $(EVAL_MODELS) --live --update-docs
 
 # Demo dates are fixed so the replayed requests match the saved responses.
 DEMO_FLAGS = --replay evals/fixtures/demo --received-date 2026-11-09 --issue-date 2026-11-09 --out out/demo
